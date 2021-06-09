@@ -1,0 +1,48 @@
+version: '3'
+
+services:
+
+  backend:
+    build:
+      context: .
+      dockerfile: ./backend/Dockerfile
+    expose:
+      - 5000
+    ports:
+      - "5000:5000"
+    links:  
+      - mongo_db:mongo_db
+    depends_on:
+      - mongo_db
+    #restart: always  
+    volumes:
+      - ./backend/flask_app:/usr/src/app
+    #command: gunicorn -w 1 -b 0.0.0.0:5000 app:app
+
+  frontend:
+    build:
+      context: .
+      dockerfile: ./frontend/Dockerfile
+    expose:
+      - 3000
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    stdin_open: true
+    tty: true
+    #restart: always
+  
+  mongo_db:
+    image: mongo:latest
+    restart: unless-stopped
+    environment:    # 환경변수를 정의합니다.
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: vitaminc
+    volumes:
+       - ./mongo/db:/data/db
+    ports:
+      - "27017:27017"
+    
+  
