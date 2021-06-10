@@ -1,6 +1,6 @@
 from flask import Flask, jsonify
 
-server = Flask(__name__) #flask 객체 
+app = Flask(__name__) #flask 객체 
 
 movies = [
    {
@@ -15,13 +15,13 @@ movies = [
    }
 ]
 
-@server.route('/') # 접속하는 url
+@app.route('/') # 접속하는 url
 def index():
     return {'flask':'test'}
 
-@server.route('/movies') # 접속하는 url
+@app.route('/movies') # 접속하는 url
 def hello_world():
     return jsonify(movies)
 
 if __name__ == "__main__":
-    server.run(host="0.0.0.0", port="5000", debug=True)
+    app.run(host="0.0.0.0", port="5000", debug=True)
