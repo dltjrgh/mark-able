@@ -1,10 +1,18 @@
-from flask import Flask, json, jsonify, request, Response
-from flask_restx.utils import default_id  # 서버 구현을 위한 Flask 객체 import
+from flask import Flask, json, jsonify, make_response
+from flask.json import JSONEncoder
 from pymongo import MongoClient
 from flask_restx import reqparse, Api, Resource  # Api 구현을 위한 Api 객체 import
 from flask_cors import CORS
 
+# AI모델을 읽어오기위한 라이브러리
+import tensorflow_hub as hub
+import tensorflow as tf
+import tensorflow_text
+from ai import cal_similarity
+
 app = Flask(__name__)  # Flask 객체 선언, 파라미터로 어플리케이션 패키지의 이름을 넣어줌.
+app.config['JSON_AS_ASCII'] = False
+
 api = Api(app)  # Flask 객체에 Api 객체 등록
 
 CORS(app) #다른 포트번호에 대한 보안 제거 
@@ -12,7 +20,7 @@ CORS(app) #다른 포트번호에 대한 보안 제거
 parser = reqparse.RequestParser()
 
 # db 연동
-host = "localhost" #도커로 실행할 때와 로컬로 단독 실행할 때 다르다! (mongo_db로 바꿔주기)
+host = "mongo_db" #단독실행시 localhost / docker실행시 mongo_db
 port = "27017"
 conn = MongoClient(host, int(port))
 
@@ -23,11 +31,29 @@ db = conn.vitaminc
 collect = db.trademark
 collect2 = db.ai
 
+# Embbeding 모델 읽어오기.
+module_url = 'https://tfhub.dev/google/universal-sentence-encoder-multilingual/3'
+model = hub.load(module_url)
 #api 구현 
 @api.route('/api')
 class index(Resource):
     def get(self):
         return "Hello World!"
+
+@api.route('/api/show_data')
+class showData(Resource):
+    def get(self):
+        s = ''
+        isFirst = True
+        results = collect.find()
+        for result in results:
+            if isFirst == True:
+                s += str(result)
+                isFirst = False
+            else:
+                s = s + ', '+ str(result)
+        #print(s)
+        return s
 
 @api.route('/api/data_transmit')
 class saveTrademark(Resource):
@@ -43,11 +69,13 @@ class saveTrademark(Resource):
         args = parser.parse_args()
         title = args['title']
         category = args['category']
-
+        top_k_sim, top_k_title, _ = cal_similarity(model, title, word_cloud=True, top_k=5)
         # document 생성 
         doc = {
             "title" : title,
-            "category" : category
+            "category" : category,
+            "top_k_sim" : top_k_sim,
+            "top_k_title":top_k_title
         }
         
         results = collect.find_one(doc)
@@ -64,6 +92,5 @@ class saveTrademark(Resource):
             return jsonify({
                 "status": 201,
                 "success": True,
-                "message": "테이블 등록"
+                "message": "데이터 등록 성공"
             })
-        
