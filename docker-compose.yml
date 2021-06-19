@@ -12,6 +12,7 @@ services:
       - "5000:5000"
     links:  
       - mongo_db:mongo_db
+      - elasticsearch:elasticsearch
     depends_on:
       - mongo_db
     restart: always  
@@ -44,6 +45,11 @@ services:
     ports:
       - "27017:27017"
 
+  mongo-seed: # 처음에 빌드할때 실행시킨이후에 주석처리하기!
+    build: ./mongo-seed
+    links:
+      - mongo_db
+
   nginx:
     image: nginx:latest
     ports:
@@ -56,17 +62,12 @@ services:
       - backend
     restart: "on-failure"
 
-#   ai:
-#     build:
-#       context: .
-#       dockerfile: ./AI/Dockerfile
-#     expose:
-#       - 8887
-#     ports:
-#       - "8887:8887"
-#     volumes:
-#       - ./AI/codes:/usr/src/app
-#     stdin_open: true
-#     tty: true
-
-  
+  elasticsearch:
+    build: elasticsearch/
+    volumes:
+      - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+    ports:
+      - "9200:9200"
+    environment:
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - "XPACK_SECURITY_ENABLED=false"
