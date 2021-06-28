@@ -2,7 +2,7 @@ from flask import Flask, jsonify, Response
 from pymongo import MongoClient
 from flask_restx import reqparse, Api, Resource # Api 구현을 위한 Api 객체 import
 from flask_cors import CORS
-from utils import search_similar_text, get_assignprodcut_dict
+from utils import *
 from prometheus_flask_exporter import PrometheusMetrics 
 from prometheus_client import Counter, Histogram # 사용할 타입 import 
 import prometheus_client
@@ -40,6 +40,9 @@ collect = db.trademark
 f = open('./api_key.txt','r')
 key = f.read()
 f.close()
+
+es_load_data() # load data to elasticsearch db
+# es_make_index()
 
 # prometheus counter 
 @app.route("/metrics")
@@ -101,7 +104,7 @@ class saveTrademark(Resource):
         title = args['title']
         code = args['code']
         
-        results = collect.find_one({"query_title":title, "code":code})
+        results = collect.find_one({"query_titl":title, "code":code})
 
         if results != None: # 아예 중복되는 데이터가 있는 경우
             print(results)
@@ -115,19 +118,20 @@ class saveTrademark(Resource):
         else: # 중복 없으면 insert
             score, meta_data = search_similar_text(title, code)
             doc = {
-            "query_title" : title,
-            "code" : code,
-            'score' : score,
-            'meta_data' : meta_data
+            'code' : code,
+            'meta_data' : meta_data,
+            'query_titl' : title,
+            'score' : score
             }
 
-            collect.insert(doc)
+            if meta_data: #존재하는 값에 대해서만 insert
+                collect.insert(doc)
 
             return jsonify({
                 "status": 201,
                 "success": True,
                 "results": {
-                    "query_title" : title,
+                    "query_titl" : title,
                     "code" : code,
                     'score' : score,
                     'meta_data' : meta_data
