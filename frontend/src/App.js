@@ -641,11 +641,11 @@ function App() {
 
   return (
     <div className="App">
-      <div className={styles.title_zone}>
-        <div onClick={toWelcomeChange}>
-          <Title></Title>
+        <div className={styles.title_zone}>
+          <div onClick={toWelcomeChange}>
+            <Title></Title>
+          </div>
         </div>
-      </div>
       {_article}
     </div>
   );
