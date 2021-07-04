@@ -99,6 +99,7 @@ a:-webkit-any-link {
 .title_img {
   margin-bottom: 5%;
   cursor: pointer;
+  width: 300px;
 }
 
 .text_gradient {
@@ -356,6 +357,18 @@ button:hover {
   transition: all 0.2s ease-in-out;
 }
 
+.table_button {
+  left: calc(50% - 6vw);
+  margin-top: 8%;
+  font-family: "Poppins" !important;
+  width: 12vw;
+  position: relative;
+  height: 4vh;
+  line-height: 0.4vw;
+  font-weight: 700;
+  text-align: center;
+}
+
 svg {
   overflow: visible;
   margin-left: 0.5vw;
@@ -609,7 +622,7 @@ ul li {
   font-family: "Poppins", "Noto Sans KR", sans-serif;
   font-size: 1.7vw;
   line-height: 3vw;
-  color: #52b788ee;
+  color: rgba(11, 82, 140, 0.836);
   align-content: stretch;
   align-items: center;
   padding: 10px;
