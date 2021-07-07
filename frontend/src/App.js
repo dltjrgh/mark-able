@@ -130,15 +130,18 @@ function App() {
 
           var score_split = data_split.split("score");
           var url_split = data_split.split("url");
+          var enrollNum_split = data_split.split("enroll_num");
           setUrl(url_split);
           if (score_split[1].split(",")[0].split("[")[1].split("]")[0] === "") {
-            setScore("No Similar Name");
+            setScore("100%");
             setUrl("");
           } else {
             setScore(
-              (
-                score_split[1].split(",")[0].split("[")[1].split("]")[0] * 100
-              ).toFixed(2) + "%"
+              100 -
+                (
+                  score_split[1].split(",")[0].split("[")[1].split("]")[0] * 100
+                ).toFixed(2) +
+                "%"
             );
             if (url_split[1].charAt(2) === '"') {
               setUrl(url_split[1].split('"')[2]);
@@ -149,11 +152,96 @@ function App() {
 
           var list_split = data_split.split("title");
 
-          setList1(list_split[1].split(",")[0].split(":")[1].split("}")[0]);
-          setList2(list_split[2].split(",")[0].split(":")[1].split("}")[0]);
-          setList3(list_split[3].split(",")[0].split(":")[1].split("}")[0]);
-          setList4(list_split[4].split(",")[0].split(":")[1].split("}")[0]);
-          setList5(list_split[5].split(",")[0].split(":")[1].split("}")[0]);
+          if (
+            (score_split[1].split(",")[0].split("[")[1] * 100).toFixed(2) ===
+            "NaN"
+          ) {
+            setList1(
+              list_split[1].split(",")[0].split(":")[1].split("}")[0] +
+                "\n출원번호 :  " +
+                enrollNum_split[1].split(",")[0].split(":")[1] +
+                "\n유사도 : " +
+                (
+                  score_split[1].split(",")[0].split("[")[1].split("]")[0] * 100
+                ).toFixed(2) +
+                "%"
+            );
+          } else {
+            setList1(
+              list_split[1].split(",")[0].split(":")[1].split("}")[0] +
+                "\n출원번호 :  " +
+                enrollNum_split[1].split(",")[0].split(":")[1] +
+                "\n유사도 : " +
+                (score_split[1].split(",")[0].split("[")[1] * 100).toFixed(2) +
+                "%"
+            );
+          }
+          if ((score_split[1].split(",")[1] * 100).toFixed(2) === "NaN") {
+            setList2(
+              list_split[2].split(",")[0].split(":")[1].split("}")[0] +
+                "\n출원번호 :  " +
+                enrollNum_split[2].split(",")[0].split(":")[1] +
+                "\n유사도 :  " +
+                (score_split[1].split(",")[1].split("]")[0] * 100).toFixed(2) +
+                "%"
+            );
+          } else {
+            setList2(
+              list_split[2].split(",")[0].split(":")[1].split("}")[0] +
+                "\n출원번호 :  " +
+                enrollNum_split[2].split(",")[0].split(":")[1] +
+                "\n유사도 :  " +
+                (score_split[1].split(",")[1] * 100).toFixed(2) +
+                "%"
+            );
+          }
+
+          if ((score_split[1].split(",")[2] * 100).toFixed(2) === "NaN") {
+            setList3(
+              list_split[3].split(",")[0].split(":")[1].split("}")[0] +
+                "\n출원번호 :  " +
+                enrollNum_split[3].split(",")[0].split(":")[1] +
+                "\n유사도 : " +
+                (score_split[1].split(",")[2].split("]")[0] * 100).toFixed(2) +
+                "%"
+            );
+          } else {
+            setList3(
+              list_split[3].split(",")[0].split(":")[1].split("}")[0] +
+                "\n출원번호 :  " +
+                enrollNum_split[3].split(",")[0].split(":")[1] +
+                "\n유사도 : " +
+                (score_split[1].split(",")[2] * 100).toFixed(2) +
+                "%"
+            );
+          }
+          if ((score_split[1].split(",")[3] * 100).toFixed(2) === "NaN") {
+            setList4(
+              list_split[4].split(",")[0].split(":")[1].split("}")[0] +
+                "\n출원번호 :  " +
+                enrollNum_split[4].split(",")[0].split(":")[1] +
+                "\n유사도 : " +
+                (score_split[1].split(",")[3].split("]")[0] * 100).toFixed(2) +
+                "%"
+            );
+          } else {
+            setList4(
+              list_split[4].split(",")[0].split(":")[1].split("}")[0] +
+                "\n출원번호 :  " +
+                enrollNum_split[4].split(",")[0].split(":")[1] +
+                "\n유사도 : " +
+                (score_split[1].split(",")[3] * 100).toFixed(2) +
+                "%"
+            );
+          }
+          setList5(
+            list_split[5].split(",")[0].split(":")[1].split("}")[0] +
+              "\n출원번호 :  " +
+              enrollNum_split[5].split(",")[0].split(":")[1] +
+              "\n유사도 : " +
+              (score_split[1].split(",")[4].split("]")[0] * 100).toFixed(2) +
+              "%"
+          );
         })
         .catch(error => {
           console.log("failed", error);
@@ -224,7 +312,7 @@ function App() {
     render() {
       return (
         <div className={styles.list_title}>
-          📝 List of Similar Trademarks of &nbsp;"{text}"
+          📝 &nbsp;"{text}" 와 유사한 상표 리스트
         </div>
       );
     }
