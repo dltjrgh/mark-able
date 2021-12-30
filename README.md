@@ -73,7 +73,7 @@ git clone https://github.com/2021-summer-program/Trademark_verification
 
 ### d. Download Dataset
 
-Download <i>data.json</i> from the [link](https://drive.google.com/file/d/1OWuc19KDH1Bm3cK_JqM7vxLMrL2d1DTF/view?usp=sharing) and add the file to the <i>root/mongo-seed/</i> folder.
+Download <i>data.json</i> from the [link](https://drive.google.com/file/d/121MmzB5duG_PS5bt442Q35wAM_R1pkaO/view?usp=sharing) and add the file to the <i>root/mongo-seed/</i> folder.
 
 ### e. Build
 
