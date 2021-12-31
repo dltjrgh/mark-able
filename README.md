@@ -2,7 +2,7 @@
   <img src="https://cdn.discordapp.com/attachments/381812425906716674/872453476788101180/77e635d998ef8c24.png" alt="Responsively Logo" width="150">
   <h1>Mark-able <a href="https://github.com/2021-summer-program/MarkAble" target="_blank"></a></h1>
   <strong>Trademark Similarity Calculation Application 🔎</strong>
-  <h6>A web service that determines the distinctiveness of given trademarks, based on a previously registered trademark dataset.</h6>
+  <h6>A web service that determines the distinctiveness of given trademarks by comparing them to previously registered trademark datasets.</h6>
 </div>
 <br><br>
 
